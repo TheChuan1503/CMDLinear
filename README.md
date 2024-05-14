@@ -2,6 +2,11 @@
 轻量的JS命令行解析器
 ## 使用方法
 - 引入JS
+```html
+<head>
+  <script src="cmdl.min.js"></script>
+</head>
+```
 - 将字符串解析为对象
 ```js
 cmdl.parse(字符串)
