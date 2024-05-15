@@ -1,11 +1,25 @@
-const cmdl = {
-    version: 1,
-    auther: "1503Dev",
-    parse: function(commandLine) {
+/**
+ * CMDLinear Command Line Interpreter
+ * Auther    1503Dev
+ * Version   2
+ * License   MIT LICENSE
+ */
+
+class CMDL {
+    constructor(commandLine, commandHeader = "") {
+        this.__header = commandHeader;
+        return this.__parse(commandLine, this);
+    }
+    __parse(commandLine, cmdl) {
         const args = [];
         let currentArg = '';
         let inQuotes = false;
         let skipSpaces = false;
+        if (cmdl.__header !== "") {
+            if (commandLine.substring(0, cmdl.__header.length) === cmdl.__header) {
+                commandLine = commandLine.substring(cmdl.__header.length);
+            } else return null;
+        }
         for (let i = 0; i < commandLine.length; i++) {
             const char = commandLine[i];
 
@@ -31,14 +45,17 @@ const cmdl = {
             args.pop();
         }
         const cmd = args.shift();
+        if (cmd === undefined) {
+            return null;
+        }
         return {
+            header: cmdl.__header,
             cmd,
             args,
             toString: function() {
-                var str = "";
-                str += this.cmd;
-                for (var i = 0; i < this.args.length; i++) {
-                    if (this.args[i].indexOf(" ") === -1) {
+                let str = this.header + this.cmd;
+                for (let i = 0; i < this.args.length; i++) {
+                    if (this.args[i].indexOf(' ') === -1) {
                         str += ' ' + this.args[i];
                     } else {
                         str += ' "' + this.args[i] + '"';
@@ -46,24 +63,6 @@ const cmdl = {
                 }
                 return str;
             }
-        };
-    },
-    toString: function(obj) {
-        if (Array.isArray(obj)) {
-            var str = "";
-            for (var i = 0; i < obj.length; i++) {
-                if (obj[i].indexOf(" ") === -1) {
-                    str += ' ' + obj[i];
-                } else {
-                    str += ' "' + obj[i] + '"';
-                }
-            }
-            if (str.substring(0, 1) === " ") {
-                str = str.substring(1);
-            }
-            return str;
-        } else {
-            return obj.toString();
         }
     }
 }
